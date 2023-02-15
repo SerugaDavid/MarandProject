@@ -1,0 +1,627 @@
+<HTML>
+<HEAD>
+<TITLE>
+!!!Sun Certified Developer for the Java 2 Platform: Application Submission
+</TITLE>
+</HEAD>
+<BODY BGCOLOR="#ffffff">
+
+<H1 ALIGN="CENTER"><A NAME="top"></A>
+Sun Certified Developer for the Java 2 Platform: Application Submission
+</H1>
+<H2 ALIGN="CENTER">Introduction and Index</H2>
+
+<P>This document tells you what you should have, and what you should
+do, to submit your solution to the 
+!!!Sun Certified Java Developer
+programming assignment. You should read it carefully before you begin work
+on the solution.  
+
+<P>The application distribution consists of:
+
+<UL>
+<LI>This document.
+<LI>Source code that serves as the starting point for your assignment.
+<LI>A flat text data file that must be converted into the appropriate
+format for use by the Data class.
+</UL>
+
+<P>Be sure to <b>maintain a backup copy of the distribution files until you 
+receive your certificate</b> in case one or more is corrupted, lost, or 
+becomes unusable.
+You may not use files from sets issued to
+other certification candidates - even if you believe they are identical.
+
+<P>This document is broken down into the following sections:
+
+<UL>
+
+<LI><A HREF="#what_this">
+<B>What This Application is About</B></A>
+ - An overview of the application you will write.
+
+<LI><A HREF="#arch">
+<B>Overall Architecture</B></A>
+ - An outline of the parts of the system and how they fit together.
+
+<LI><A HREF="#api_spec">
+<B>Supplied Code and Required Enhancements</B></A>
+ - Details about the assignment and information describing the
+ state of the various pieces provided with this assignment.
+
+<LI><A HREF="#UI">
+<B>Creating the user interface</B></A>
+ - Description of the facilities that must be provided by the user
+ interface. The user interface must be designed and written from scratch.
+
+<LI><A HREF="#net_protocol">
+<B>Network Approaches</B></A>
+ - Description of the network connection approaches that may be used by the
+ client and server portions to interoperate.
+
+<LI><A HREF="#data_convert"><B>The Data Conversion Tool</B></A>
+ - A description of the data conversion tool you must write.
+
+<LI><A HREF="#Deliverables"><B>Deliverables</B></A>
+ - The components you must deliver, and how you should package them.
+
+<LI><A HREF="#marking"><B>Marking</B></A>
+ - A description of how your assignment will be graded, with values
+ describing the particular emphasis of each grading element.
+
+<LI><A HREF="#whattodo"><B>What to do if you have a question</B></a>
+</UL>
+
+<P><A HREF="instructions.html#top"><em>Return to top</em></A> 
+<HR>
+
+<H2 ALIGN="CENTER"><A NAME="what_this"></A>
+What This Application is About</H2>
+
+<H3>Background</H3>
+
+<P>Fly By Night Services is a small but growing travel agency that
+provides flight information on a small selection of routes and
+carriers. The company's IT department recently had an undergraduate
+student in for work experience during the summer vacation. This
+undergraduate did some work using the Java programming language and
+started to produce a rudimentary database system.
+
+<P>The Information Systems Department Manager now wishes to extend this
+work into a usable application. This application should keep scheduled
+flight information for a number of airlines and routes, and it should 
+provide a
+convenient way to search for and book flights that might suit customer's 
+requirements.  This is the project that you have been commissioned to 
+complete.
+
+<H3>The Current Project Status</H3>
+
+<P>At present, a basic data storage and retrieval system (the
+"database") has been implemented and shown to work by the
+undergraduate. No network or user level code exists. The database is not 
+relational. The data set for
+the project exists as a flat ASCII file, and it must be converted as
+part of the assignment. Fly By Night Services anticipates that future
+projects will use the same database and therefore this conversion
+program should be reasonably easy to reuse.
+
+<H3>What you must do</H3>
+<P>The following are the "top level" features that must be implemented: 
+
+<UL>
+<LI>a graphical user interface for viewing flight information and
+booking a flight
+
+<LI>extensions to the database to support a more flexible search
+and record locking
+
+<LI>network server functionality for the database system
+
+<LI>communications functionality to connect the user interface with the
+database
+
+<LI>data conversion, to prepare the flat text file for use in the database.
+
+</UL>
+
+<H3>How you must do it</H3>
+
+You have been given strict guidelines about the
+way the work is to be performed. These guidelines are to 
+ensure consistency of marking and to ensure each candidate's workload
+is comparable.
+</UL>
+
+<P>The work involves a number of design choices that have to be made.
+In all such cases, the following principles should be applied.
+
+<DL>
+<DT><H4>Clarity and Maintainability.</H4>
+<DD>A clear design, such as will be readily understood by junior
+programmers, will be preferred to a complex one, even if the complex one
+is a little more efficient than the simple choice. However, poor
+algorithm design where standard solutions are well known will be
+penalized.
+
+<DT><H4>Documentation.</H4>
+<DD>The code itself should be as clear as possible, and "obvious"
+comments should be avoided. Awkward or complex code should have
+descriptive comments, and javadoc style comments must be used for each
+element of the public interface of each class. You must create
+a full suite of documentation for the classes of the completed project,
+including those that form part of this distribution.
+This must be achieved using the tool "javadoc" and must be in HTML format.
+
+<P>You should also provide basic user documentation. This should be
+sufficient to allow a user who is familiar with the
+intent of the project to use the application and conversion program.
+If you wish, appropriate parts of the user documentation may be provided
+on-line.
+
+<DT><H4>Correctness.</H4>
+<DD>The design used must correctly implement the specified requirements.
+
+<DT><H4>Use of Standard Elements and Design Patterns.</H4>
+<DD>The design should use standard Java package facilities wherever
+possible. Designs should not involve building new code if the effect can
+adequately be achieved using facilities in the standard Java packages.
+Performance alone is not a justification for ignoring this.
+
+
+</DL>
+
+<P><A HREF="instructions.html#top"><em>Return to top</em></A> 
+
+<P><HR>
+<H2 ALIGN="CENTER"><A NAME="arch"></A>
+Overall Architecture</H2>
+
+<P>Architecturally, the application is a traditional client-server
+system. There are three key parts: the server-side database with
+network server functionality, the client-side graphical user interface,
+and a client-side database client part that handles the networking on
+behalf of the user interface.
+
+<P>Additionally, the program must be able to work in a non-networked
+mode. In this mode, the database and user interface run in the same VM
+and no networking is performed. The user must be able to select the
+operating mode, although it is acceptable that the program stay in one
+mode once it has started up.
+
+<P>You have a choice regarding the network connection protocol. You may
+use either serialized objects over a simple socket connection, or you
+may use RMI. Your submission will fail automatically if you do not use
+one of these approaches.
+
+<P>The remote client code that you write must 
+provide all the public methods of the
+suncertify.db.Data class.
+
+<P><A HREF="instructions.html#top"><em>Return to top</em></A> 
+
+<P><HR>
+<H2 ALIGN="CENTER"><A NAME="api_spec"></A>
+Supplied Code and Required Enhancements</H2>
+
+<P>The classes and code provided to you include some comments, 
+including some in javadoc format. You should refer to these and
+consider the source itself for a full understanding of the provided
+code.
+
+<P>The following paragraphs outline the packages that are provided
+and detail the changes that you must make.
+
+<H3>Deprecated Methods</h3>
+<P>In all packages, you should correct any use of deprecated methods. You 
+will need to make some decisions about how to achive this. Consult the 
+section <a href="#whattodo">What to do if you have a question</a> which 
+describes how you should approach this situation.
+
+<H3>Target Platform</H3>
+<P>Throughout this exercise, you must use exclusively the Java 2
+platform. This means that you should use a distribution of JDK 1.2
+with its associated classes and tools. You are not required to develop
+your code using any particular implementation of the Java 2 platform,
+but the submission that you return <em>must have been tested and shown
+to work under Sun Microsystems' reference version of the Java 2
+platform</em>.
+
+<p><B><i>Failure to adhere to these directions will result in automatic 
+failure</i></B>
+
+<H3>Execution of Submissions</H3>
+<p>Your submission must run under the reference version of Sun's JRE
+1.2. You may develop using an IDE (Integrated Development Environment)
+but your final product may not have any residual dependency upon that.
+
+<p>When you submit your assignment, you must ensure that it is packaged
+in such a way that it is completely clear how the examiner should
+run it using the reference JRE 1.2.  Specifically, you should document
+clear, simple command lines that allow your programs to be run on any
+Java 2 platform, regardless of the underlying hardware and operating
+system. These command lines may only take configuration parameters
+selected from this list:
+
+<ul>
+<li>DNS name of the server
+<li>Port number used by the server
+<li>Data file name(s)
+<li><tt>java.rmi.server.codebase</tt>
+<li>security manager policy file
+</ul>
+
+<p>You must <em>not</em> require the editing of any files by the examiners.
+
+<p><B><i>Failure to adhere to these directions will result in automatic 
+failure</i></B>
+
+<H3>Packaging of Submissions</H3>
+<p>All submissions must be packaged in a JAR file.
+<P><B>
+Database - Package suncertify.db</B></A>
+
+<P>Following is a description of the package that is provided, and of
+the extensions you are expected to implement.
+
+<P>Three classes are in this package: Data, DataInfo, and FieldInfo.
+With the exception of three methods, noted below, these classes are
+complete and functional, and you have the source code for them.  Any
+additional classes you create that are related to the database should
+be placed in the suncertify.db package.
+
+<H3>Extending suncertify.db.Data</H3>
+
+<P>Part of your assignment will be to enhance the Data class. 
+You may do this by modification or subclassing, but you should document the
+approach and reason for your choice.
+
+<p>You are required to implement the <tt>criteriaFind(String)</tt>,
+<tt>lock(int)</tt> and <tt>unlock(int)</tt> methods:
+
+<P><tt><B>public DataInfo[] criteriaFind(String criteria)</B></tt> 
+
+<P>This method searches the database for entries matching the criteria
+supplied. Criteria take the form of a comma separated list of &lt;field
+name&gt;=&lt;value to match&gt; specifications.
+
+<P>For example, the following argument string would select all records
+describing flights by the SpeedyAir carrier that originate in San
+Francisco.  <P><TT>"Carrier='SpeedyAir',Origin='SFO'"</TT>
+
+<P>Note that only exact matches need to be handled in this
+<tt>criteriaFind(String)</tt> method.
+
+<P>The method returns an array of DataInfo objects describing all the
+records found in the database which match these criteria. In the event
+of an invalid field name being provided as part of the criteria the
+behavior of this method is the same as if no records matching correctly
+specified criteria.
+
+<P><tt><B>public void lock(int record)</B></tt> 
+<P><tt><B>public void unlock(int record)</B></tt> 
+<P>Record locking must be implemented using the methods
+<tt>public void lock(int)</tt> and <tt>public void unlock(int)</tt>.
+These methods are required to allow concurrent use of the database when
+booking flights from multiple clients. Note that the locking required
+is effectively a "write" lock only. If updates occur to a record that
+is being displayed on another client, then no change occurs at the
+other client. However, if two clients attempt to perform the sequence
+lock,read,modify,write,unlock concurrently, then both modification
+attempts will be handled correctly.  The aim is to ensure that if two
+customers attempt to book a seat on the same flight concurrently, then
+the number of available seats is definitely reduced by two, unless
+there was only one seat, in which case, one customer will be advised at
+booking time that no more seats are available.
+
+<P>The <tt>lock</tt> method should block until the requested lock can be
+applied. The integer argument indicates the record to be locked.
+
+<P>The <tt>unlock</tt> method simply removes the lock from the
+specified record. If
+an attempt is made to unlock a record that has not been locked by this
+connection, then no action is be taken.
+
+<H3>Writing the Data Server</H3>
+
+<P>You must create a data server that will accept multiple concurrent
+network connections and allow them to interrogate and manipulate the
+database. Because multiple concurrent connections may exist, you must
+make both your server and the suncertify.db classes threadsafe. You may
+implement your threaded server in more than one class if you choose.
+
+<H3>Writing Data Client</H3>
+
+<P>To connect with your server, you should create a client program.
+This implementation should include a class that implements the same public 
+methods
+as the suncertify.db.Data class, although it will need different
+constructors to allow it to support the network configuration.
+
+<P><HR>
+<H2 ALIGN="CENTER"><A NAME="UI"></A>
+Creating the user interface
+</H2>
+
+<P>The user interface for this assignment must satisfy the following 
+criteria:
+
+<UL>
+<LI>Only components from the Java Foundation Classes (Swing components)
+should be used.
+
+<LI>The main data output section of the user interface should be created
+using a JTable.
+
+<LI>The user interface should connect to the database using either a
+local or a network based connection according to user choice.
+
+<LI>The user should be able to select the origin and
+destination of flights, and the display should update to show only
+flights that satisfy those criteria. The user must be able to describe
+"any" for the origin, destination, or both, so as to implement a 
+wildcard-like feature.
+
+<LI>The user must be able to book one or more seats on a chosen flight.
+If the flight cannot provide those seats, the user must be informed. It
+is not necessary to provide for live updates on multiple clients when
+new bookings are made at other clients.
+
+</UL>
+<P>Your user interface should be designed with the expectation of
+future functionality enhancements, and it should establish a control
+scheme that will support this with minimal disruption to the users when
+this occurs.
+
+<P><A HREF="instructions.html#top"><em>Return to top</em></A> 
+
+<P><HR>
+<H2><P ALIGN="CENTER"><A NAME="net_protocol"></A>
+Network Approaches
+</H2>
+
+<P>You may choose between using RMI, or using serialized
+objects over TCP socket connections, to implement the database 
+network communication. Your choice here will not affect your
+grade, but no other approach is acceptable.
+In either case, the
+program must allow the user to specify the location of the database,
+and it must also accept an indication that a local database
+is to be used, in which case, the networking must be bypassed
+entirely.  No authentication is required for database access.
+
+<P>You may implement such classes as you need in order to support this
+network protocol. The classes should be in appropriate packages and
+source files, and each method should be documented according to the
+general guidelines.
+
+<P><A HREF="instructions.html#top"><em>Return to top</em></A>
+
+<P><HR>
+<H2><P ALIGN="CENTER"><A NAME="data_convert"></A>
+The Data Conversion Tool
+</H2>
+
+<P>You must create a data conversion tool that reads the flat ASCII data
+file and creates a binary file for use by the suncertify.db.Data class.
+
+<P>This should be achieved bearing in mind that Fly By Night Services
+expects to make future use of this database and therefore expects to
+make use of the conversion tool for other projects in the future.
+
+<P>The conversion tool, along with its user documentation, must be provided
+as part of your project submission.
+
+<H3>The Data Set</H3>
+
+<P>The data set provided is given here. You should copy this into an ascii 
+file and use it for the project:
+
+<p><pre>
+SA001^SFO^DEN^SpeedyAir^400^Sun^13:40^20m^50
+SA002^SFO^LHR^SpeedyAir^2000^Mon^11:20^11h65m^22
+SA003^SFO^LAX^SpeedyAir^100^Tue^10:50^22m^37
+SA004^LAX^SFO^SpeedyAir^100^Tue^14:75^34m^0
+PA001^DAL^FRA^PromptAir^800^Wed^15:25^9h35m^14
+PA002^FRA^DAL^PromptAir^800^Thu^5:25^9h55m^4
+PA003^FRA^BOM^PromptAir^700^Thu^9:30^8h30m^97
+PA004^BOM^FRA^PromptAir^700^Fri^19:45^8h10m^75
+PA005^DEN^ABQ^PromptAir^756^Wed^19:50^1h10m^43
+PA006^ABQ^DEN^PromptAir^756^Thu^8:00^1h10m^28
+PA007^DEN^ATL^PromptAir^536^Wed^18:55^2h55m^78
+PA008^ATL^DEN^PromptAir^536^Thu^6:45^3h10m^21
+RA981^FRA^BOM^RainvilleAir^700^Fri^12:00^9h30m^120
+RA982^BOM^FRA^RainvilleAir^700^Sat^4:45^9h10m^99
+RA983^DAL^FRA^RainvilleAir^800^Thu^5:55^10h35m^43
+RA984^FRA^DAL^RainvilleAir^800^Fri^15:55^10h55m^95
+RA985^DEN^ATL^RainvilleAir^536^Sat^8:50^3h55m^5
+RA986^ATL^DEN^RainvilleAir^536^Fri^16:54^4h10m^5
+RA987^DEN^ABQ^RainvilleAir^756^Thu^9:44^2h10m^7
+RA988^ABQ^DEN^RainvilleAir^756^Fri^18:20^2h10m^11
+BA001^SFO^DEN^BeethAir^387^Sun^13:40^20m^50
+BA002^SFO^LHR^BeethAir^1645^Mon^11:20^11h65m^22
+BA003^SFO^LAX^BeethAir^99^Sun^23:50^30m^7
+BA004^LAX^SFO^BeethAir^99^Sun^14:75^40m^10
+</pre>
+
+<p>The format of this data is as follows. Fields are separated using the 
+caret symbol '^':
+<ul>
+<li>Flight number
+<li>Origin airport
+<li>Destination airport
+<li>Carrier
+<li>Price
+<li>Day
+<li>Time
+<li>Duration
+<li>Available seats
+</ul>
+
+<p>You may modify the contents of the flat file, but such changes should
+be kept to a minimum and should only be made for a clearly justified 
+reason.
+
+<P><A HREF="instructions.html#top"><em>Return to top</em></A>
+
+<P><HR>
+<H2><P ALIGN="CENTER"><A NAME="Deliverables"></A>
+Deliverables
+</H2>
+
+<P>When you submit your assignment, you should provide the following parts.
+
+<UL>
+<LI>Full source and object code, including new classes, modified
+versions of supplied classes, and copies of supplied classes that were
+not modified. These should be in an appropriate directory structure
+along with the classfiles. You may use JAR files to contain groups of
+elements of your submission as you deem appropriate, for example, to
+support the execution of your programs.
+
+<LI>Full documentation. You should provide both HTML/Javadoc
+documentation for all classes, supplied, modified, and new. Also
+provide user documentation for the database server, the gui client, and
+the data conversion utility.  As noted earlier, you user documentation
+may be online if you wish, but there must be one file in the root
+directory of your submission called README. This README file should
+indicate the required command line format for launching your data
+server, client application, and data conversion tool.
+
+<LI>A README file. You <em>must</em> create a single text file (plain ASCII
+format, wordprocessor formats are unacceptable) called README or README.TXT 
+that
+describes to the examiner the following information:
+<UL>
+<LI>how to execute the programs
+<LI>the files you have submitted, with a note of their location in the 
+directory structure, and a high level description of the purpose of each.
+<LI>a specific note indicating what file(s) contain(s) a detailed
+description of your design choices and other supporting
+documentation.
+</UL>
+</UL>
+
+<P>All elements of your submission must be packaged into a single JAR
+file for submission. It is permitted to nest JAR files inside the main JAR.
+
+<P><A HREF="instructions.html#top"><em>Return to top</em></A>
+
+<P><HR>
+<H2><P ALIGN="CENTER"><A NAME="marking"></A>
+Marking
+</H2>
+<P>This section describes how your submission will be marked, and the
+marking criteria which govern allocation of marks for the 
+Sun Certified Developer for the Java 2 platform application
+submission. The first part describes the marking process, and the
+second describes how the marks are allocated.
+
+<P>The first describes
+general criteria which are expected to apply to all parts of the
+submission. The second part is divided into three sections which describe 
+considerations that
+are specific to the three main tasks in the requirements: the user
+interface, the network connection, and the database search facility.
+
+<B>
+<P>How The Assignment is Marked
+</B>
+<P>The marking is done is two phases. First, the examiner runs the code,
+ensuring that it functions correctly through the specified operations.
+
+<P>Provided the essential behavioral requirements of the assignment
+have been correctly implemented, the examiner proceeds to investigate
+the design and implementation of your assignment.  This process is time
+consuming, and it is because this is done carefully and thoroughly that
+submissions take time to grade. The grading process is closely
+controlled to ensure consistency and fairness, and it is performed
+according to criteria detailed in the next section.
+
+<P>In addition to the submission, you will be required to take a
+written examination. This exam tests your understanding of your
+submission and asks you to justify a number of design choices embodied
+in that submission. For any design choice concerning topics not 
+specifically
+described in the requirements, marks are awarded for a clear and consistent
+approach, rather than for any particular solution. <B>Design decisions
+should be <I>briefly but clearly</I> described in your comments.</B>
+
+<B><P>
+Marking Criteria
+</B>
+<P>The following marking criteria are given as a guide. The numbers in
+parentheses beside each topic indicate the relative proportion of marks
+available in that area (note that they do not add up to 100, and hence
+are not percentages). Some of these criteria, especially the ones in
+"General Considerations," apply in more than one place, and as such
+might appear to show a disproportionate score. In some cases, a topic
+shows a few notes to elaborate on the meaning of the heading.
+
+<UL>
+<LI>General Considerations (Total 72)
+<UL>
+<LI>ease of use of, and documentation for, finished programs (15)
+<LI>consistent and logical approach to problem solving (20)
+<LI>adherence to coding standards and readability of code (15)
+<LI>clarity and Maintainability of the design and implementation (7)
+<LI>consistent and appropriate error handling (10)
+<LI>use of java core packages rather than re-invention (5)
+</UL>
+
+<LI>Documentation (10)
+<UL>
+<LI>documentation of how to use finished programs (see previous section)
+<LI>javadoc source documentation
+<LI>documentation of non-obvious aspects of code
+<LI>avoidance of excessive commenting of "obvious" aspects of source
+<LI>user documentation
+</UL>
+
+<LI>Object Oriented Design (6)
+<UL>
+<LI>appropriate use of member variables, methods, and method automatics
+<LI>appropriate accessibility and scope of members.
+</UL>
+<LI>User Interface (20)
+<UL>
+<LI>layout supports required features and extension
+<LI>layout uses good/accepted Human/Computer Interaction (HCI) principles
+</UL>
+
+<LI>Data Conversion Program (10)
+
+<LI>Server Design (Total 37)
+<UL>
+<LI>appropriate classes are utilized in a threadsafe manner. (8)
+<LI>locking is correctly implemented. (15)
+<LI>error handling (6)
+<LI>search algorithm, clarity and efficiency (8)
+</UL>
+</UL>
+
+<P><A HREF="instructions.html#top"><em>Return to top</em></A> </BODY>
+
+
+<P><HR>
+<H2><A NAME="whattodo">What to do if you have a question</a></h2>
+
+<P>You may find that you want to ask for further explanation of some
+part of these notes, perhaps to seek permission to solve a problem in a
+particular way. These notes deliberately leave some issues unspecified,
+and some problems unraised. Your ability to think through these issues,
+in the face of realistically imperfect specifications, and come to a
+tenable solution is something upon which you are being graded.
+
+<P>You should consider the options available and make a decision about
+how to address the problem yourself. This decision making process is
+part of the marking scheme, and as such it is crucially important that
+you provide documentation of your choice.  Be sure to describe the
+options you considered, the perceived benefits and weaknesses of each,
+and why you chose the solution you did. You will not be marked on the
+choice that you made, but rather on the consistency of your decision
+making process and your adherence to other aspects of these notes
+during that decision making process.
+
+<P><A HREF="instructions.html#top"><em>Return to top</em></A>
+</HTML>
