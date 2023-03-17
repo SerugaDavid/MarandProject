@@ -86,18 +86,45 @@ public class FlightsServlet extends HttpServlet {
                 }
                 break;
             case "airlines":
-                // TODO: get airlines
+                // get airlines
                 url = url.substring("airlines".length());
                 substring = getSubstringUrl(url);
                 switch (substring) {
                     case "name":
-                        // TODO: send result for this name
+                        url = url.substring("name".length());
+                        url = fixUrl(url);
+                        if (url.length() == 0) {
+                            response.getOutputStream().println("[]");
+                            break;
+                        }
+                        if (this.data.testConnection()) {
+                            response.getOutputStream().println(this.data.getAirlinesByName(url).toString());
+                        } else {
+                            response.getOutputStream().println("[]");
+                        }
                        break;
                     case "id":
-                        // TODO: send result for this id
+                        url = url.substring("id".length());
+                        url = fixUrl(url);
+                        int id = 0;
+                        try {
+                            id = Integer.parseInt(url);
+                        } catch (NumberFormatException e) {
+                            response.getOutputStream().println("[]");
+                            break;
+                        }
+                        if (this.data.testConnection()) {
+                            response.getOutputStream().println(this.data.getAirlinesById(id).toString());
+                        } else {
+                            response.getOutputStream().println("[]");
+                        }
                         break;
                     case "":
-                        // TODO: send all airlines
+                        if (this.data.testConnection()) {
+                            response.getOutputStream().println(this.data.getAirlines().toString());
+                        } else {
+                            response.getOutputStream().println("[]");
+                        }
                         break;
                     default:
                         response.getOutputStream().println("[]");
@@ -113,21 +140,6 @@ public class FlightsServlet extends HttpServlet {
                 response.getOutputStream().println("Invalid url!");
                 break;
         }
-
-        /*
-        JSONObject json;
-        if (this.data.testConnection())
-            json = this.data.getFlights();
-        else {
-            System.out.println("Connection failed!");
-            return;
-        }
-        if (json != null)
-            response.getOutputStream().println(json.toString());
-        else
-            response.getOutputStream().println("{}");
-
-         */
     }
 
     /**
