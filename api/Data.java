@@ -145,6 +145,20 @@ public class Data {
         return executeQuery(query);
     }
 
+    public JSONArray getFlightsById(int id) {
+        String query = "SELECT * FROM Flights Where idFlights = " + id + ";";
+        return executeQuery(query);
+    }
+
+    /**
+     * TODO:
+     * - getFlightsByFlightNumber
+     * - getFlightsByAirline
+     * - getFlightsByOrigin
+     * - getFlightsByDestination
+     * - ...
+     */
+
     public JSONArray getAirlines() {
         String query = "SELECT * FROM Airlines;";
         return executeQuery(query);
