@@ -175,6 +175,11 @@ public class Data {
         return executeQuery(query);
     }
 
+    /**
+     * Makes connection to the database, executes a give query and returns the result
+     * @param query MySql query
+     * @return JSONArray created from result
+     */
     private JSONArray executeQuery(String query) {
         try {
             Connection connection = DriverManager.getConnection(this.connectionUrl, this.userPass, this.userPass);
@@ -193,9 +198,6 @@ public class Data {
      * @return JSONObject from the result set.
      */
     private JSONArray generateJsonFromResult(ResultSet resultSet) {
-        // TODO: Fix this method.
-        // TODO: Make sure it returns JSONArray.
-
         try {
             String jsonString = "[";
             ResultSetMetaData metaData = resultSet.getMetaData();
@@ -230,12 +232,11 @@ public class Data {
                         case "Time":
                         case "Duration":
                             Time timeValue = resultSet.getTime(columnName);
-                            // TODO: generate jsonString
+                            jsonString += "\"" + columnName + "\": \"" + timeValue.toString() + "\", ";
                             break;
                         default:
                             break;
                     }
-
                 }
                 jsonString = jsonString.substring(0, jsonString.length() - 2);
                 jsonString += "}, ";
@@ -246,10 +247,6 @@ public class Data {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
-    }
-
-    public JSONObject getEntry(String id) {
-        return null;
+        return new JSONArray("[]");
     }
 }
