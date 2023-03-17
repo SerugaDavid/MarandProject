@@ -39,21 +39,49 @@ public class FlightsServlet extends HttpServlet {
 
         switch (substring) {
             case "airports":
-                // TODO: get airports
+                // get airports
                 url = url.substring("airports".length());
+                url = fixUrl(url);
                 substring = getSubstringUrl(url);
                 switch (substring) {
                     case "abbreviation":
-                        // TODO: send result for this abbreviation;
+                        url = url.substring("id".length());
+                        url = fixUrl(url);
+                        if (url.length() == 0) {
+                            response.getOutputStream().println("[]");
+                            break;
+                        }
+                        if (this.data.testConnection()) {
+                            response.getOutputStream().println(this.data.getAirportsByAbbreviation(url).toString());
+                        } else {
+                            response.getOutputStream().println("[]");
+                        }
                         break;
                     case "id":
-                        // TODO: send result for this id
+                        url = url.substring("id".length());
+                        url = fixUrl(url);
+                        int id = 0;
+                        try {
+                            id = Integer.parseInt(url);
+                        } catch (NumberFormatException e) {
+                            response.getOutputStream().println("[]");
+                            break;
+                        }
+                        if (this.data.testConnection()) {
+                            response.getOutputStream().println(this.data.getAirportsById(id).toString());
+                        } else {
+                            response.getOutputStream().println("[]");
+                        }
                         break;
                     case "":
-                        // TODO: send all airports
+                        if (this.data.testConnection()) {
+                            response.getOutputStream().println(this.data.getAirports().toString());
+                        } else {
+                            response.getOutputStream().println("[]");
+                        }
                         break;
                     default:
-                        // TODO: send empty
+                        response.getOutputStream().println("[]");
                         break;
                 }
                 break;
@@ -72,7 +100,7 @@ public class FlightsServlet extends HttpServlet {
                         // TODO: send all airlines
                         break;
                     default:
-                        // TODO: send empty
+                        response.getOutputStream().println("[]");
                         break;
                 }
                 break;
