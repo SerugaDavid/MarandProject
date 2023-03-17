@@ -140,13 +140,42 @@ public class Data {
 
         return update;
     }
-
-    /**
-     * Get all flights from database.
-     * @return JSONObject with all flights.
-     */
-    public JSONObject getFlights() {
+    public JSONArray getFlights() {
         String query = "SELECT * FROM Flights;";
+        return executeQuery(query);
+    }
+
+    public JSONArray getAirlines() {
+        String query = "SELECT * FROM Airlines;";
+        return executeQuery(query);
+    }
+
+    public JSONArray getAirlinesById(int id) {
+        String query = "SELECT * FROM Airlines WHERE idAirlines = " + id + ";";
+        return executeQuery(query);
+    }
+
+    public JSONArray getAirlinesByName(String name) {
+        String query = "SELECT * FROM Airlines WHERE Name = '" + name + "';";
+        return executeQuery(query);
+    }
+
+    public JSONArray getAirports() {
+        String query = "SELECT * FROM Airports;";
+        return executeQuery(query);
+    }
+
+    public JSONArray getAirportsById(int id) {
+        String query = "SELECT * FROM Airports WHERE idAirports = " + id + ";";
+        return executeQuery(query);
+    }
+
+    public JSONArray getAirportsByAbbreviation(String abbreviation) {
+        String query = "SELECT * FROM Airports WHERE Abbreviation = '" + abbreviation + "';";
+        return executeQuery(query);
+    }
+
+    private JSONArray executeQuery(String query) {
         try {
             Connection connection = DriverManager.getConnection(this.connectionUrl, this.userPass, this.userPass);
             Statement statement = connection.createStatement();
@@ -163,24 +192,57 @@ public class Data {
      * @param resultSet Result set from the database.
      * @return JSONObject from the result set.
      */
-    private JSONObject generateJsonFromResult(ResultSet resultSet) {
+    private JSONArray generateJsonFromResult(ResultSet resultSet) {
+        // TODO: Fix this method.
+        // TODO: Make sure it returns JSONArray.
+
         try {
-            String jsonString = "{";
+            String jsonString = "[";
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             while (resultSet.next()) {
                 jsonString += "{";
                 for (int i = 1; i <= columnCount; i++) {
                     String columnName = metaData.getColumnName(i);
-                    String value = resultSet.getString(columnName);
-                    jsonString += "\"" + columnName + "\": \"" + value + "\", ";
+                    switch (columnName) {
+                        case "idFlights":
+                        case "idAirlines":
+                        case "idAirports":
+                        case "OriginAirportID":
+                        case "DestinationAirportID":
+                        case "Airlines_idAirlines":
+                        case "AvailableSeats":
+                            int intValue = resultSet.getInt(columnName);
+                            jsonString += "\"" + columnName + "\": " + intValue + ", ";
+                            break;
+                        case "FlightNumber":
+                        case "Day":
+                        case "Name":
+                        case "Tag":
+                        case "Abbreviation":
+                            String stringValue = resultSet.getString(columnName);
+                            jsonString += "\"" + columnName + "\": \"" + stringValue + "\", ";
+                            break;
+                        case "Price":
+                            double doubleValue = resultSet.getDouble(columnName);
+                            jsonString += "\"" + columnName + "\": " + doubleValue + ", ";
+                            break;
+                        case "Time":
+                        case "Duration":
+                            Time timeValue = resultSet.getTime(columnName);
+                            // TODO: generate jsonString
+                            break;
+                        default:
+                            break;
+                    }
+
                 }
                 jsonString = jsonString.substring(0, jsonString.length() - 2);
                 jsonString += "}, ";
             }
             jsonString = jsonString.substring(0, jsonString.length() - 2);
-            jsonString += "}";
-            return new JSONObject(jsonString);
+            jsonString += "]";
+            return new JSONArray(jsonString);
         } catch (SQLException e) {
             e.printStackTrace();
         }
