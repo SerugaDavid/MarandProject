@@ -29,10 +29,62 @@ public class FlightsServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String requestUrl = request.getRequestURI();
-        String instruction = requestUrl.substring("/api/flights/".length());
+        String url = fixUrl(requestUrl);
 
         response.setContentType("application/json");
-        response.getOutputStream().println(instruction);
+        response.getOutputStream().println(url);
+
+        String substring = getSubstringUrl(url);
+
+
+        switch (substring) {
+            case "airports":
+                // TODO: get airports
+                url = url.substring("airports".length());
+                substring = getSubstringUrl(url);
+                switch (substring) {
+                    case "abbreviation":
+                        // TODO: send result for this abbreviation;
+                        break;
+                    case "id":
+                        // TODO: send result for this id
+                        break;
+                    case "":
+                        // TODO: send all airports
+                        break;
+                    default:
+                        // TODO: send empty
+                        break;
+                }
+                break;
+            case "airlines":
+                // TODO: get airlines
+                url = url.substring("airlines".length());
+                substring = getSubstringUrl(url);
+                switch (substring) {
+                    case "name":
+                        // TODO: send result for this name
+                       break;
+                    case "id":
+                        // TODO: send result for this id
+                        break;
+                    case "":
+                        // TODO: send all airlines
+                        break;
+                    default:
+                        // TODO: send empty
+                        break;
+                }
+                break;
+            case "flights":
+                // TODO: get flights
+                url = url.substring("flights".length());
+
+                break;
+            default:
+                response.getOutputStream().println("Invalid url!");
+                break;
+        }
 
         /*
         JSONObject json;
@@ -51,6 +103,20 @@ public class FlightsServlet extends HttpServlet {
     }
 
     /**
+     * Gets the first substring of url (url till the '/')
+     * @param url Original url
+     * @return First substring of url
+     */
+    private String getSubstringUrl(String url) {
+        String substring;
+        if (url.contains("/"))
+            substring = url.substring(0, url.indexOf('/'));
+        else
+            substring = url;
+        return substring;
+    }
+
+    /**
      * API post call. Adds received json to database. Only one entry.
      *
      * @param request  request
@@ -61,13 +127,13 @@ public class FlightsServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String requestUrl = request.getRequestURI();
-        String instruction = requestUrl.substring("/api/flights/".length());
+        String url = fixUrl(requestUrl);
 
         if (!this.data.testConnection()) {
             System.out.println("Connection failed!");
             return;
         }
-        switch (instruction) {
+        switch (url) {
             case "airports":
                 JSONArray jsonAirports = new JSONArray(getPostBody(request));
                 this.data.addAirports(jsonAirports);
@@ -105,5 +171,19 @@ public class FlightsServlet extends HttpServlet {
             e.printStackTrace();
         }
         return sb.toString();
+    }
+
+    /**
+     * Removes leading and trailing slashes from url.
+     * @param requestUrl url from request
+     * @return url without leading and trailing slashes
+     */
+    private String fixUrl(String requestUrl) {
+        String url = requestUrl.substring("/api/flights".length());
+        if (url.length() > 0 && url.charAt(0) == '/')
+            url = url.substring(1);
+        if (url.length() > 0 && url.charAt(url.length() - 1) == '/')
+            url = url.substring(0, url.length() - 1);
+        return url;
     }
 }
