@@ -19,9 +19,12 @@ public class FlightsServlet extends HttpServlet {
     }
 
     /**
-     * API get call. Prints json of all flights to response output stream.
+     * API get call.
+     * Classifies what kind of GET request this is by url.
+     * Gets the data from the url and sends a correct json.
+     * If there was a problem or there is no data it sends empty json.
      *
-     * @param request  request
+     * @param request request
      * @param response response
      * @throws IOException
      * @throws ServletException
@@ -36,13 +39,15 @@ public class FlightsServlet extends HttpServlet {
 
         String substring = getSubstringUrl(url);
 
-
+        // On what table is this call
         switch (substring) {
             case "airports":
                 // get airports
                 url = url.substring("airports".length());
                 url = fixUrl(url);
                 substring = getSubstringUrl(url);
+
+                // what data should we get
                 switch (substring) {
                     case "abbreviation":
                         url = url.substring("id".length());
@@ -89,6 +94,8 @@ public class FlightsServlet extends HttpServlet {
                 // get airlines
                 url = url.substring("airlines".length());
                 substring = getSubstringUrl(url);
+
+                // what data should we get
                 switch (substring) {
                     case "name":
                         url = url.substring("name".length());
@@ -134,6 +141,33 @@ public class FlightsServlet extends HttpServlet {
             case "flights":
                 // TODO: get flights
                 url = url.substring("flights".length());
+                substring = getSubstringUrl(url);
+
+                // what data should we get
+                switch (substring) {
+                    case "id":
+                        url = url.substring("id".length());
+                        url = fixUrl(url);
+                        int id = 0;
+                        try {
+                            id = Integer.parseInt(url);
+                        } catch (NumberFormatException e) {
+                            response.getOutputStream().println("[]");
+                            break;
+                        }
+                        if (this.data.testConnection()) {
+                            response.getOutputStream().println(this.data.getFlightsById(id).toString());
+                        } else {
+                            response.getOutputStream().println("[]");
+                        }
+                        break;
+                    case "":
+                        if (this.data.testConnection()) {
+                            response.getOutputStream().println(this.data.getFlights().toString());
+                        } else {
+                            response.getOutputStream().println("[]");
+                        }
+                }
 
                 break;
             default:
