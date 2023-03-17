@@ -4,24 +4,79 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
 public class Converter {
     public static void main(String[] args) {
+        String url = "http://localhost:8080/api/flights";
         try {
             JSONArray airlines = getNewAirlines("./data_file.csv");
-            // TODO: call API to add airlines to database
+            APIPost(airlines, url + "/airlines");
 
             JSONArray airports = getNewAirports("./data_file.csv");
-            // TODO: call API to add airports to database
+            APIPost(airports, url + "/airports");
 
             JSONArray flights = getFlights("./data_file.csv");
-            // TODO: call API to add flights to database
+            APIPost(flights, url);
+
         } catch (FileNotFoundException e) {
             System.out.println("File not found!");
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Calls API to add airlines to database.
+     * @param airlines JSONArray with all airlines.
+     */
+    public static void APIPost(JSONArray airlines, String url) {
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) new URL(url).openConnection();
+        } catch (IOException e) {
+            System.out.println("Malformed URL!");
+            e.printStackTrace();
+            System.exit(1);
+        }
+        try {
+            connection.setRequestMethod("POST");
+        } catch (ProtocolException e) {
+            System.out.println("Protocol exception!");
+            e.printStackTrace();
+            System.exit(1);
+        }
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Accept", "application/json");
+
+        connection.setDoOutput(true);
+        try {
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write(airlines.toString());
+            writer.flush();
+        } catch (IOException e) {
+            System.out.println("IO exception! Writing Json");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        try {
+            int responseCode = connection.getResponseCode();
+            if (responseCode == 200)
+                System.out.println("Post was successful!");
+            else
+                System.out.println("Post failed!");
+        } catch (IOException e) {
+            System.out.println("IO exception! Getting response code");
+            e.printStackTrace();
+            System.exit(1);
         }
     }
 
