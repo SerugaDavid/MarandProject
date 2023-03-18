@@ -31,11 +31,12 @@ public class FlightsServlet extends HttpServlet {
      */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        System.out.println("GET request received");
         String requestUrl = request.getRequestURI();
         String url = fixUrl(requestUrl);
 
         response.setContentType("application/json");
-        response.getOutputStream().println(url);
+        // response.getOutputStream().println(url);
 
         String substring = getSubstringUrl(url);
 
@@ -50,7 +51,7 @@ public class FlightsServlet extends HttpServlet {
                 // what data should we get
                 switch (substring) {
                     case "abbreviation":
-                        url = url.substring("id".length());
+                        url = url.substring("abbreviation".length());
                         url = fixUrl(url);
                         if (url.length() == 0) {
                             response.getOutputStream().println("[]");
@@ -200,11 +201,12 @@ public class FlightsServlet extends HttpServlet {
      */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        System.out.println("POST request received!");
         String requestUrl = request.getRequestURI();
         String url = fixUrl(requestUrl);
 
         if (!this.data.testConnection()) {
-            System.out.println("Connection failed!");
+            System.out.println("Connection failed! in FlightServlet.java");
             return;
         }
         switch (url) {
@@ -253,7 +255,9 @@ public class FlightsServlet extends HttpServlet {
      * @return url without leading and trailing slashes
      */
     private String fixUrl(String requestUrl) {
-        String url = requestUrl.substring("/api/flights".length());
+        String url = requestUrl;
+        if (requestUrl.contains("/api/flights"))
+            url = requestUrl.substring("/api/flights".length());
         if (url.length() > 0 && url.charAt(0) == '/')
             url = url.substring(1);
         if (url.length() > 0 && url.charAt(url.length() - 1) == '/')

@@ -12,6 +12,10 @@ public class Data {
     public Data() {
         this.connectionUrl = "jdbc:mysql://localhost:3306/FlyByNight";
         this.userPass = "root";
+
+        // TODO: add JSONArray to dependency list for jetty
+        // TODO: add JSONObject to dependency list for jetty
+        // TODO: give up?
     }
 
     /**
@@ -22,8 +26,11 @@ public class Data {
         try {
             Connection connection = DriverManager.getConnection(this.connectionUrl, this.userPass, this.userPass);
             connection.close();
+            System.out.println("Connection successful!");
             return true;
         } catch (SQLException e) {
+            System.out.println("Connection failed! in Data.java");
+            e.printStackTrace();
             return false;
         }
     }
@@ -84,7 +91,8 @@ public class Data {
             String key = keys.next();
             update += "'" + entry.get(key) + "', ";
         }
-        update = update.substring(0, update.length() - 2);
+        if (update.charAt(update.length() - 1) != '(')
+            update = update.substring(0, update.length() - 2);
         update += ");";
         return update;
     }
@@ -108,7 +116,8 @@ public class Data {
         for (int i = 0; i < airports.length(); i++) {
             update += "('" + airports.getString(i) + "', '" + airports.getString(i) + "'), ";
         }
-        update = update.substring(0, update.length() - 2);
+        if (airports.length() == 0)
+            update = update.substring(0, update.length() - 2);
         update += ";";
         return update;
     }
@@ -135,7 +144,8 @@ public class Data {
         for (int i = 0; i < name.length(); i++) {
             update += "('" + name.getString(i) + "', '" + tag.getString(i) + "'), ";
         }
-        update = update.substring(0, update.length() - 2);
+        if (name.length() == 0)
+            update = update.substring(0, update.length() - 2);
         update += ";";
 
         return update;
@@ -255,7 +265,8 @@ public class Data {
                 jsonString = jsonString.substring(0, jsonString.length() - 2);
                 jsonString += "}, ";
             }
-            jsonString = jsonString.substring(0, jsonString.length() - 2);
+            if (jsonString.length() > 2)
+                jsonString = jsonString.substring(0, jsonString.length() - 2);
             jsonString += "]";
             return new JSONArray(jsonString);
         } catch (SQLException e) {
