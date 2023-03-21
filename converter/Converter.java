@@ -21,6 +21,8 @@ public class Converter {
         String url = "http://localhost:8080/api/flights";
         String path = "C:\\Users\\david\\Documents\\GitHub\\MarandProject\\converter\\data_file.csv";
         try {
+            // done
+
             JSONArray airlines = getNewAirlines(path);
             APIPost(airlines, url + "/airlines");
 
@@ -104,7 +106,7 @@ public class Converter {
             row.put("Airlines_idAirlines", getId("airlines", "name", lineSplit[3], url));
             row.put("Price", Double.parseDouble(lineSplit[4]));
             row.put("Day", lineSplit[5]);
-            row.put("Time", lineSplit[6] + ":00");
+            row.put("Time", durationToTime(lineSplit[6]));
             row.put("Duration", durationToTime(lineSplit[7]));
             row.put("AvailableSeats", Integer.parseInt(lineSplit[8]));
             flights.put(row);
@@ -119,14 +121,23 @@ public class Converter {
      * @return String value of time
      */
     public static String durationToTime(String duration) {
-        String hour = "00";
-        String min = "00";
-        if (duration.contains("h")) {
-            String[] split = duration.split("h");
-            hour = split[0];
-            duration = split[1];
+        int hour = 0;
+        int min = 0;
+        if (duration.contains("m")) {
+            if (duration.contains("h")) {
+                String[] split = duration.split("h");
+                hour = Integer.parseInt(split[0]);
+                duration = split[1];
+            }
+            min = Integer.parseInt(duration.substring(0, duration.length()-1));
+        } else if (duration.contains(":")) {
+            String[] split = duration.split(":");
+            hour = Integer.parseInt(split[0]);
+            min = Integer.parseInt(split[1]);
         }
-        min = duration.substring(0, duration.length()-1);
+        hour += min / 60;
+        min = min % 60;
+
         return hour + ":" + min + ":00";
     }
 
@@ -179,7 +190,7 @@ public class Converter {
 
         JSONArray entry = new JSONArray(response);
 
-        return entry.getJSONObject(0).getInt("idA" + column.substring(1));
+        return entry.getJSONObject(0).getInt("idA" + table.substring(1));
     }
 
     /**
@@ -190,7 +201,8 @@ public class Converter {
      * @throws FileNotFoundException If file is not found.
      */
     public static JSONArray getNewAirlines(String path) throws FileNotFoundException {
-        HashSet<String[]> airlines = new HashSet<>();
+        ArrayList<String> names = new ArrayList<>();
+        ArrayList<String> tags = new ArrayList<>();
         Scanner sc = new Scanner(new File(path));
         String line;
         String[] lineSplit;
@@ -198,15 +210,14 @@ public class Converter {
         while (sc.hasNextLine()) {
             line = sc.nextLine().trim();
             lineSplit = line.split("\\^");
-            airlines.add(new String[]{lineSplit[3], lineSplit[0].substring(0, 2)});
+            if (!tags.contains(lineSplit[0].substring(0, 2))) {
+                tags.add(lineSplit[0].substring(0, 2));
+                names.add(lineSplit[3]);
+            }
         }
 
-        JSONArray name = new JSONArray();
-        JSONArray tag = new JSONArray();
-        for (String[] airline : airlines) {
-            name.put(airline[0]);
-            tag.put(airline[1]);
-        }
+        JSONArray name = new JSONArray(names);
+        JSONArray tag = new JSONArray(tags);
 
         JSONArray out = new JSONArray();
         out.put(name);
