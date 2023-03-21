@@ -2,6 +2,11 @@
  
 ## Navodila za uporabo
 
+Implementirana sta samo podatkovna baza in API. Ni pa mi
+uspelo narediti uporabniškega vmesnika. 
+
+Narejen je tudi converter, ki bazo napolni.
+
 
 ## Potek izdelave
 
