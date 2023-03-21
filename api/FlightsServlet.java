@@ -44,9 +44,11 @@ public class FlightsServlet extends HttpServlet {
         switch (substring) {
             case "airports":
                 // get airports
+                System.out.println("before: " + url);
                 url = url.substring("airports".length());
                 url = fixUrl(url);
                 substring = getSubstringUrl(url);
+                System.out.println("after: " + url + ", " + substring);
 
                 // what data should we get
                 switch (substring) {
@@ -93,8 +95,11 @@ public class FlightsServlet extends HttpServlet {
                 break;
             case "airlines":
                 // get airlines
+                System.out.println("before: " + url);
                 url = url.substring("airlines".length());
+                url = fixUrl(url);
                 substring = getSubstringUrl(url);
+                System.out.println("after: " + url + ", " + substring);
 
                 // what data should we get
                 switch (substring) {
@@ -140,9 +145,12 @@ public class FlightsServlet extends HttpServlet {
                 }
                 break;
             case "flights":
-                // TODO: get flights
+                // get flights
+                System.out.println("before: " + url);
                 url = url.substring("flights".length());
+                url = fixUrl(url);
                 substring = getSubstringUrl(url);
+                System.out.println("after: " + url + ", " + substring);
 
                 // what data should we get
                 switch (substring) {

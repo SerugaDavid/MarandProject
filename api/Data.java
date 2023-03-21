@@ -42,6 +42,7 @@ public class Data {
      */
     private void insertInto(String update) {
         try {
+            System.out.println(update);
             Connection connection = DriverManager.getConnection(this.connectionUrl, this.userPass, this.userPass);
             Statement statement = connection.createStatement();
             statement.executeUpdate(update);
@@ -87,11 +88,13 @@ public class Data {
         update = update.substring(0, update.length() - 2);
         update += ") VALUES (";
         keys = entry.keys();
+        int count = 0;
         while (keys.hasNext()) {
             String key = keys.next();
             update += "'" + entry.get(key) + "', ";
+            count++;
         }
-        if (update.charAt(update.length() - 1) != '(')
+        if (count != 0)
             update = update.substring(0, update.length() - 2);
         update += ");";
         return update;
@@ -116,7 +119,7 @@ public class Data {
         for (int i = 0; i < airports.length(); i++) {
             update += "('" + airports.getString(i) + "', '" + airports.getString(i) + "'), ";
         }
-        if (airports.length() == 0)
+        if (airports.length() != 0)
             update = update.substring(0, update.length() - 2);
         update += ";";
         return update;
@@ -144,7 +147,7 @@ public class Data {
         for (int i = 0; i < name.length(); i++) {
             update += "('" + name.getString(i) + "', '" + tag.getString(i) + "'), ";
         }
-        if (name.length() == 0)
+        if (name.length() != 0)
             update = update.substring(0, update.length() - 2);
         update += ";";
 
@@ -206,6 +209,7 @@ public class Data {
      */
     private JSONArray executeQuery(String query) {
         try {
+            System.out.println(query);
             Connection connection = DriverManager.getConnection(this.connectionUrl, this.userPass, this.userPass);
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -268,10 +272,12 @@ public class Data {
             if (jsonString.length() > 2)
                 jsonString = jsonString.substring(0, jsonString.length() - 2);
             jsonString += "]";
+            System.out.println(jsonString);
             return new JSONArray(jsonString);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println("[]");
         return new JSONArray("[]");
     }
 }
