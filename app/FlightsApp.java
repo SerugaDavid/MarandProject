@@ -1,6 +1,8 @@
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -8,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class FlightsApp {
     private JPanel MainPanel;
