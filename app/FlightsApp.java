@@ -114,6 +114,10 @@ public class FlightsApp {
     private void updateTable(JSONArray flights, JSONArray airports, JSONArray airlines) {
         if (flights.length() == 0) {
             System.out.println("No flights found");
+            DefaultTableModel dm = (DefaultTableModel) this.flightsTable.getModel();
+            for (int i = this.flightsTable.getRowCount() - 1; i >= 0; i--) {
+                dm.removeRow(i);
+            }
             return;
         }
 
