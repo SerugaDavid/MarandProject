@@ -170,6 +170,34 @@ public class FlightsServlet extends HttpServlet {
                             response.getOutputStream().println("[]");
                         }
                         break;
+                    case "origin-destination":
+                        url = url.substring("origin-destination".length());
+                        url = fixUrl(url);
+
+                        // get origin and destination
+                        String origin = getSubstringUrl(url);
+                        url = url.substring(origin.length());
+                        url = fixUrl(url);
+                        String destination = getSubstringUrl(url);
+
+                        // parse to int
+                        int o = 0;
+                        int d = 0;
+                        try {
+                            o = Integer.parseInt(origin);
+                            d = Integer.parseInt(destination);
+                        } catch (NumberFormatException e) {
+                            response.getOutputStream().println("[]");
+                            break;
+                        }
+
+                        // get flights
+                        if (this.data.testConnection()) {
+                            response.getOutputStream().println(this.data.getFlightsByOriginDestination(o, d).toString());
+                        } else {
+                            response.getOutputStream().println("[]");
+                        }
+                        break;
                     case "":
                         if (this.data.testConnection()) {
                             response.getOutputStream().println(this.data.getFlights().toString());
