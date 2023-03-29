@@ -133,11 +133,11 @@ public class FlightsApp {
             row.add(getAirportName(flight.getInt("OriginAirportID"), airports));
             row.add(getAirportName(flight.getInt("DestinationAirportID"), airports));
             row.add(getAirlineName(flight.getInt("Airlines_idAirlines"), airlines));
-            row.add(flight.getString("Price"));
+            row.add(String.valueOf(flight.getDouble("Price")));
             row.add(flight.getString("Day"));
             row.add(flight.getString("Time"));
             row.add(flight.getString("Duration"));
-            row.add(flight.getString("AvailableSeats"));
+            row.add(String.valueOf(flight.getInt("AvailableSeats")));
 
             data.add(row);
         }
