@@ -95,8 +95,8 @@ public class FlightsApp {
     }
 
     private JSONArray getFlights(String origin, String destination, JSONArray airports) {
-        int o = 0;
-        int d = 0;
+        int o = -1;
+        int d = -1;
 
         for (int i = 0; i < airports.length(); i++) {
             if (airports.getJSONObject(i).getString("Name").equals(origin)) {
