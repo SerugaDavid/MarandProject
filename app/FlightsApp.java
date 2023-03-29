@@ -88,12 +88,23 @@ public class FlightsApp {
         return connect(url);
     }
 
+    /**
+     * Calls API to get all airlines.
+     * @return JSONArray with all airports.
+     */
     private JSONArray getAirlinesArray() {
         String url = this.url + "/airlines";
 
         return connect(url);
     }
 
+    /**
+     * Calls API to get all flights from origin to destination.
+     * @param origin String with origin airport name.
+     * @param destination String with destination airport name.
+     * @param airports JSONArray with all airports.
+     * @return JSONArray with all flights.
+     */
     private JSONArray getFlights(String origin, String destination, JSONArray airports) {
         int o = -1;
         int d = -1;
@@ -111,6 +122,12 @@ public class FlightsApp {
         return connect(url);
     }
 
+    /**
+     * Updates JTable with flights.
+     * @param flights JSONArray with all flights.
+     * @param airports JSONArray with all airports.
+     * @param airlines JSONArray with all airlines.
+     */
     private void updateTable(JSONArray flights, JSONArray airports, JSONArray airlines) {
         if (flights.length() == 0) {
             System.out.println("No flights found");
@@ -121,12 +138,19 @@ public class FlightsApp {
             return;
         }
 
-        Vector<String> columns = getColumns(flights);
+        Vector<String> columns = getColumns();
         Vector<Vector<String>> data = getData(flights, airports, airlines);
 
         this.flightsTable.setModel(new DefaultTableModel(data, columns));
     }
-    
+
+    /**
+     * Gets correct data from flights arra<
+     * @param flights JSONArray with all flights.
+     * @param airports JSONArray with all airports.
+     * @param airlines JSONArray with all airlines.
+     * @return Vector with all data.
+     */
     private Vector<Vector<String>> getData(JSONArray flights, JSONArray airports, JSONArray airlines) {
         Vector<Vector<String>> data = new Vector<>();
         for (int i = 0; i < flights.length(); i++) {
@@ -148,6 +172,12 @@ public class FlightsApp {
         return data;
     }
 
+    /**
+     * Gets airport name from id.
+     * @param id Airport id.
+     * @param airports JSONArray with all airports.
+     * @return Airport name.
+     */
     private String getAirportName(int id, JSONArray airports) {
         for (int i = 0; i < airports.length(); i++) {
             if (airports.getJSONObject(i).getInt("idAirports") == id) {
@@ -157,6 +187,12 @@ public class FlightsApp {
         return "";
     }
 
+    /**
+     * Gets airline name from id.
+     * @param id Airline id.
+     * @param airlines JSONArray with all airlines.
+     * @return Airline name.
+     */
     private String getAirlineName(int id, JSONArray airlines) {
         for (int i = 0; i < airlines.length(); i++) {
             if (airlines.getJSONObject(i).getInt("idAirlines") == id) {
@@ -166,7 +202,11 @@ public class FlightsApp {
         return "";
     }
 
-    private Vector<String> getColumns(JSONArray flights) {
+    /**
+     * Generates columns for JTable.
+     * @return Vector with all columns.
+     */
+    private Vector<String> getColumns() {
         Vector<String> columns = new Vector<>();
         columns.add("Številka leta");
         columns.add("Odhodno letališče");
@@ -180,6 +220,11 @@ public class FlightsApp {
         return columns;
     }
 
+    /**
+     * Connects to API and gets response.
+     * @param url API url.
+     * @return JSONArray with response from API.
+     */
     private JSONArray connect(String url) {
         HttpURLConnection connection = null;
         try {
