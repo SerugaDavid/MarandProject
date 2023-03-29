@@ -164,7 +164,15 @@ public class Data {
     }
 
     public JSONArray getFlightsByOriginDestination(int origin, int destination) {
-        String query = "SELECT * FROM Flights WHERE OriginAirportID = " + origin + " AND DestinationAirportID = " + destination + ";";
+        String query = "SELECT * FROM Flights WHERE";
+        if (origin != -1)
+            query += " OriginAirportID = " + origin;
+        if (destination != -1) {
+            if (origin != -1)
+                query += " AND";
+            query += " DestinationAirportID = " + destination;
+        }
+        query += ";";
         return executeQuery(query);
     }
 
