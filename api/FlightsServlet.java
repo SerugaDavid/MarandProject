@@ -181,8 +181,8 @@ public class FlightsServlet extends HttpServlet {
                         String destination = getSubstringUrl(url);
 
                         // parse to int
-                        int o = 0;
-                        int d = 0;
+                        int o = -1;
+                        int d = -1;
                         try {
                             o = Integer.parseInt(origin);
                             d = Integer.parseInt(destination);
