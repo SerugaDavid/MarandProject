@@ -16,11 +16,11 @@ public class FlightsApp {
     private JPanel MainPanel;
     private JComboBox origin;
     private JComboBox destination;
-    private JTable flightsTable;
     private JButton findFlightsButton;
     private JLabel Heading;
     private JLabel originLable;
     private JLabel destinationLabel;
+    private JScrollPane scrollPane;
     private String url;
 
     public FlightsApp() {
@@ -45,8 +45,8 @@ public class FlightsApp {
         this.url = "http://localhost:8080/api/flights";
         String[] airports = getAirports();
         for (String airport : airports) {
-            origin.addItem(airport);
-            destination.addItem(airport);
+            this.origin.addItem(airport);
+            this.destination.addItem(airport);
         }
 
 
@@ -60,8 +60,10 @@ public class FlightsApp {
         JFrame frame = new JFrame("FlightsApp");
         frame.setContentPane(new FlightsApp().MainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
+        //frame.pack();
+        frame.setSize(800, 600);
         frame.setVisible(true);
+
     }
 
     /**
@@ -131,17 +133,14 @@ public class FlightsApp {
     private void updateTable(JSONArray flights, JSONArray airports, JSONArray airlines) {
         if (flights.length() == 0) {
             System.out.println("No flights found");
-            DefaultTableModel dm = (DefaultTableModel) this.flightsTable.getModel();
-            for (int i = this.flightsTable.getRowCount() - 1; i >= 0; i--) {
-                dm.removeRow(i);
-            }
+            this.scrollPane.setViewportView(new JLabel("Ni najdenih letov"));
             return;
         }
 
         Vector<String> columns = getColumns();
         Vector<Vector<String>> data = getData(flights, airports, airlines);
 
-        this.flightsTable.setModel(new DefaultTableModel(data, columns));
+        this.scrollPane.setViewportView(new JTable(data, columns));
     }
 
     /**
