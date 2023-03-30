@@ -300,4 +300,31 @@ public class FlightsServlet extends HttpServlet {
             url = url.substring(0, url.length() - 1);
         return url;
     }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("PUT request received!");
+        String requestUrl = request.getRequestURI();
+        String url = fixUrl(requestUrl);
+
+        String substring = getSubstringUrl(url);
+        switch (substring) {
+            case "booking":
+                JSONArray bookings = new JSONArray(getPostBody(request));
+                if (this.data.testConnection()) {
+                    if (this.data.bookFlight(bookings)) {
+                        response.setStatus(200);
+                    } else {
+                        response.setStatus(400);
+                    }
+                } else {
+                    System.out.println("Connection failed! in FlightServlet.java");
+                    response.setStatus(500);
+                }
+                break;
+            default:
+                response.getOutputStream().println("Invalid url!");
+                break;
+        }
+    }
 }
