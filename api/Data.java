@@ -295,4 +295,18 @@ public class Data {
         System.out.println("[]");
         return new JSONArray("[]");
     }
+
+    public boolean bookFlight(JSONArray flight) {
+        int flightId = flight.getInt(0);
+        String query = "SELECT AvailableSeats FROM flights WHERE idFlights = " + flightId + ";";
+        JSONArray result = executeQuery(query);
+        if (result.length() == 0)
+            return false;
+        int availableSeats = result.getJSONObject(0).getInt("AvailableSeats");
+        if (availableSeats == 0)
+            return false;
+        query = "UPDATE Flights SET AvailableSeats = AvailableSeats - 1 WHERE idFlights = " + flightId + ";";
+        executeQuery(query);
+        return true;
+    }
 }
