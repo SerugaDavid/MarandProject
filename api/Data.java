@@ -1,8 +1,6 @@
-import com.mysql.cj.exceptions.WrongArgumentException;
-
 import java.sql.*;
 import java.util.Iterator;
-import java.util.Map;
+
 import org.json.*;
 
 public class Data {
@@ -12,10 +10,6 @@ public class Data {
     public Data() {
         this.connectionUrl = "jdbc:mysql://localhost:3306/FlyByNight";
         this.userPass = "root";
-
-        // TODO: add JSONArray to dependency list for jetty
-        // TODO: add JSONObject to dependency list for jetty
-        // TODO: give up?
     }
 
     /**
@@ -36,11 +30,11 @@ public class Data {
     }
 
     /**
-     * Method for inserting data into database.
+     * Method for inserting updating data in the database.
      * Requires an update string.
      * @param update SQL update string.
      */
-    private void insertInto(String update) {
+    private void insertUpdate(String update) {
         try {
             System.out.println(update);
             Connection connection = DriverManager.getConnection(this.connectionUrl, this.userPass, this.userPass);
@@ -59,7 +53,7 @@ public class Data {
      */
     public void addFlight(JSONObject entry) {
         String update = generateUpdateString(entry);
-        insertInto(update);
+        insertUpdate(update);
     }
 
     /**
@@ -106,7 +100,7 @@ public class Data {
      */
     public void addAirports(JSONArray airports) {
         String update = generateAirportString(airports);
-        insertInto(update);
+        insertUpdate(update);
     }
 
     /**
@@ -131,7 +125,7 @@ public class Data {
      */
     public void addAirlines(JSONArray airlines) {
         String update = generateAirlinesString(airlines);
-        insertInto(update);
+        insertUpdate(update);
     }
 
     /**
@@ -306,7 +300,7 @@ public class Data {
         if (availableSeats == 0)
             return false;
         query = "UPDATE Flights SET AvailableSeats = AvailableSeats - 1 WHERE idFlights = " + flightId + ";";
-        executeQuery(query);
+        insertUpdate(query);
         return true;
     }
 }
