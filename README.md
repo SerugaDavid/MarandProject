@@ -44,25 +44,23 @@ Ta baza ima tri tabele:
   - Duration
   - AvailableSeats
 
-Shemo lahko najdemo shranjeno kot model v `./database/models/FlyByNight.mwb`
+Shemo lahko najdemo shranjeno kot model v
+`./database/models/FlyByNight.mwb`
 
 ### API server
 Da sem postavil API server sem uporabil Jetty.
 Ta se tudi nahaja v `./jetty-home-10.0.13`.
 
 Napisal sem dva razreda, ki delata s podatki. To sta `Data`
-in `FlightsServlet`. Najdemo jih v `./api/`. Razred `Data` je namenjen za branje
-podatkov iz same baze. Ta direkno dela z njo. Medtem ko
-razred `FlightsServlet` deluje kot API.
+in `FlightsServlet`. Najdemo jih v `./api/`. Razred `Data`
+je namenjen za branje podatkov iz same baze. Ta direkno
+dela z njo. Medtem ko razred `FlightsServlet` deluje kot API.
 
-Ta razred ima dve
-glavni metodi `doGet` in `doPost`. Metoda `doGet` je
-namenjena za poizvedbe tipa `GET` in pridobiva podatke vn
-iz baze. Metoda `doPost` je namenjena za poizvedbe tipa
-`POST` in dodaja podatke v bazo.
-
-Api ne omogoča spreminjanje podatkov. Samo dodajanje in
-branje le teh.
+Ta razred ima tri glavne metodi `doGet`, `doPost` in `doPut`.
+Metoda `doGet` je namenjena za poizvedbe tipa `GET` in pridobiva
+podatke vn iz baze. Metoda `doPost` je namenjena za poizvedbe
+tipa `POST` in dodaja podatke v bazo. Metoda `doPut` je namenjena
+za poizvedbe tipa `PUT` in posodablja podatke v bazi.
 
 URL za api je http://localhost:8080/api/flights. Ko pa
 delamo različne poizvedbe ali ko dodajamo podatke pa
