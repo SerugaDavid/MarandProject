@@ -2,10 +2,19 @@
  
 ## Navodila za uporabo
 
-Implementirana sta samo podatkovna baza in API. Ni pa mi
-uspelo narediti uporabniškega vmesnika. 
-
+Implementirana sta podatkovna baza in API.
 Narejen je tudi converter, ki bazo napolni.
+
+Naredil sem tudi GUI aplikacijo, ki je namenjena za
+pregled letov ter rezervacijo teh.
+
+V aplikaciji lahko izberemo letališče, iz katerega
+letimo in letališče, kam letimo. Nato s klikom na gumb
+`Najdi polete` dobimo vse lete, ki so na voljo.
+
+Ko vidimo vse polete, ki so na voljo, lahko izberemo
+enega od teh in ga rezerviramo s klikom na gumb
+`Rezerviraj polet`.
 
 
 ## Potek izdelave
@@ -85,6 +94,10 @@ dopolnimo naš URL.
     - pošlje podatke o letališčih
   - /
     - pošlje podatke o letih
+- **PUT**
+  - /booking
+    - naredi rezervacijo leta
+    - potrebuje, da mu v telesu pošljemo json array s številko leta npr: `["PA001"]`
 
 ### Converter
 
@@ -102,3 +115,16 @@ baza avtomatsko dodeli id-je. In kasneje, ko dodajam lete
 tudi kličem moj api, da mi vrača id-je letališč in
 letalskih družb. To pa delam zato, ker v tabeli za polete
 potrebujem id-je letališč in letalskih družb.
+
+### GUI aplikacija
+
+Aplikacija je namenjena temu, da pogledamo, kateri leti
+obstajajo in katere od teh lahko rezerviramo.
+Aplikacija se pogovarja s prej narejenim API-jem inž
+tako pridobiva in posodablja podatke iz baze.
+
+To lahko najdemo v `./app/`, kjer je njen glavni razred
+`FlightsApp`. Notri so vse metode za prikazovanje
+elementov in posodabljanje teh.
+
+GUI je narejen z elementi Java Swing.
