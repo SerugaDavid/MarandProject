@@ -23,6 +23,7 @@ public class FlightsApp {
     private JLabel originLable;
     private JLabel destinationLabel;
     private JScrollPane scrollPane;
+    private JButton reservation;
     private String url;
 
     public FlightsApp() {
@@ -35,6 +36,20 @@ public class FlightsApp {
                 JSONArray airlines = getAirlinesArray();
                 JSONArray flights = getFlights(origin, destination, airports);
                 updateTable(flights, airports, airlines);
+            }
+        });
+
+        this.reservation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = ((JTable)FlightsApp.this.scrollPane.getViewport().getView()).getSelectedRow();
+                int col = 0;
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a flight!");
+                    return;
+                }
+                String flightNumber = (String) ((JTable)FlightsApp.this.scrollPane.getViewport().getView()).getValueAt(row, col);
+                FlightsApp.this.bookFlight(flightNumber);
             }
         });
 
