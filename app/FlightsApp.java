@@ -169,7 +169,7 @@ public class FlightsApp {
     }
 
     /**
-     * Gets correct data from flights arra<
+     * Gets correct data from flights array
      * @param flights JSONArray with all flights.
      * @param airports JSONArray with all airports.
      * @param airlines JSONArray with all airlines.
@@ -289,5 +289,53 @@ public class FlightsApp {
 
         JSONArray entry = new JSONArray(response);
         return entry;
+    }
+
+    /**
+     * Books flight.
+     * Calls API with PUT method and flight number to book this flight.
+     * @param flightNumber Flight number to book.
+     */
+    private void bookFlight(String flightNumber) {
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) new URL(this.url + "/booking").openConnection();
+        } catch (IOException e) {
+            System.out.println("Malformed URL!");
+            e.printStackTrace();
+            System.exit(1);
+        }
+        try {
+            connection.setRequestMethod("PUT");
+        } catch (ProtocolException e) {
+            System.out.println("Protocol exception!");
+            e.printStackTrace();
+            System.exit(1);
+        }
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Accept", "application/json");
+
+        connection.setDoOutput(true);
+        try {
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write("[\"" + flightNumber + "\"]");
+            writer.flush();
+        } catch (IOException e) {
+            System.out.println("IO exception! Writing Json");
+            e.printStackTrace();
+            System.exit(1);
+        }
+        try {
+            if (connection.getResponseCode() != 200) {
+                System.out.println("Connection failed");
+                System.exit(1);
+            }
+            JOptionPane.showMessageDialog(null, "Rezervacija uspešna!");
+            this.findFlights();
+        } catch (IOException e) {
+            System.out.println("Connection failed");
+            System.exit(1);
+        }
+
     }
 }
