@@ -2,10 +2,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
