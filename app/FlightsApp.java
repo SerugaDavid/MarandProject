@@ -27,15 +27,10 @@ public class FlightsApp {
     private String url;
 
     public FlightsApp() {
-        findFlightsButton.addActionListener(new ActionListener() {
+        this.findFlightsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String origin = (String) FlightsApp.this.origin.getSelectedItem();
-                String destination = (String) FlightsApp.this.destination.getSelectedItem();
-                JSONArray airports = getAirportsArray();
-                JSONArray airlines = getAirlinesArray();
-                JSONArray flights = getFlights(origin, destination, airports);
-                updateTable(flights, airports, airlines);
+                FlightsApp.this.findFlights();
             }
         });
 
@@ -81,6 +76,19 @@ public class FlightsApp {
         frame.setSize(800, 600);
         frame.setVisible(true);
 
+    }
+
+    /**
+     * Gets all needed information from API to update table.
+     * Then calls updateTable method that updates the table.
+     */
+    private void findFlights() {
+        String origin = (String) this.origin.getSelectedItem();
+        String destination = (String) this.destination.getSelectedItem();
+        JSONArray airports = getAirportsArray();
+        JSONArray airlines = getAirlinesArray();
+        JSONArray flights = getFlights(origin, destination, airports);
+        updateTable(flights, airports, airlines);
     }
 
     /**
