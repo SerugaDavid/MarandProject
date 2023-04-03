@@ -326,12 +326,15 @@ public class FlightsApp {
             System.exit(1);
         }
         try {
-            if (connection.getResponseCode() != 200) {
+            if (connection.getResponseCode() == 200) {
+                JOptionPane.showMessageDialog(null, "Rezervacija uspešna!");
+                this.findFlights();
+            } else if (connection.getResponseCode() == 400) {
+                JOptionPane.showMessageDialog(null, "Let je že zaseden!");
+            } else {
                 System.out.println("Connection failed");
                 System.exit(1);
             }
-            JOptionPane.showMessageDialog(null, "Rezervacija uspešna!");
-            this.findFlights();
         } catch (IOException e) {
             System.out.println("Connection failed");
             System.exit(1);
